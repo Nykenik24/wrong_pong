@@ -19,13 +19,14 @@ function love.load()
 	WORLD = LIB.bump.newWorld()
 	LogMessage("trace", "Created WORLD")
 	PLAYER = require("src.player")
-	WORLD:add(PLAYER, PLAYER.x, PLAYER.y, PLAYER.w, PLAYER.h)
 	LogMessage("trace", "Created PLAYER")
+	WORLD:add(PLAYER, PLAYER.x, PLAYER.y, PLAYER.w, PLAYER.h)
+	LogMessage("trace", "Added PLAYER to WORLD")
 end
 
 function love.update(dt)
-	WORLD:move(PLAYER, PLAYER.x + 20, PLAYER.y)
-	WORLD:update(dt)
+  local goalX, goalY = PLAYER.x + (PLAYER.speed * PLAYER.vx) * dt, PLAYER.y + (PLAYER.speed * PLAYER.vy) * dt
+  PLAYER.x, PLAYER.y = WORLD:move(PLAYER, goalX, goalY)
 end
 
 function love.draw()
@@ -47,6 +48,7 @@ function love.keypressed(key)
 end
 
 function LogMessage(type, msg, add_to_hist)
+	type = type or "regular"
 	add_to_hist = add_to_hist or false
 	if add_to_hist then
 		LOG_HISTORY[#LOG_HISTORY + 1] = {
