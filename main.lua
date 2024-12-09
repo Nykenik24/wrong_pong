@@ -7,15 +7,21 @@ function love.load()
 		CLASS = require("src.utils.class"),
 	}
 	LogMessage("info", "Loaded utils")
-	require("init")()
-  LogMessage("info", 'Runned "init.lua"')
 	LOG_HISTORY = {}
-  LogMessage("trace", "Created LOG_HISTORY", true)
+	LogMessage("trace", "Created LOG_HISTORY")
+	require("init")()
+	LogMessage("info", 'Runned "init.lua"')
+	LIB = {}
+	LogMessage("info", "Loaded libraries")
+	PLAYER = require("src.player")
+	LogMessage("trace", "Created PLAYER")
 end
 
 function love.update(dt) end
 
-function love.draw() end
+function love.draw()
+	love.graphics.rectangle("fill", PLAYER.x, PLAYER.y, PLAYER.w, PLAYER.h)
+end
 
 function love.keypressed(key)
 	local function setKey(new_key, action)
@@ -25,18 +31,18 @@ function love.keypressed(key)
 	end
 
 	setKey("escape", love.event.quit)
-  setKey("f1", function()
-    love.event.quit("restart")
-  end)
+	setKey("f1", function()
+		love.event.quit("restart")
+	end)
 end
 
 function LogMessage(type, msg, add_to_hist)
-  add_to_hist = add_to_hist or false
+	add_to_hist = add_to_hist or false
 	if add_to_hist then
 		LOG_HISTORY[#LOG_HISTORY + 1] = {
-      type = type,
-      msg = msg
-    }
+			type = type,
+			msg = msg,
+		}
 	end
 	return UTILS.DEBUG[type](msg)
 end
