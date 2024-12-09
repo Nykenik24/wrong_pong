@@ -11,15 +11,25 @@ function love.load()
 	LogMessage("trace", "Created LOG_HISTORY")
 	require("init")()
 	LogMessage("info", 'Runned "init.lua"')
-	LIB = {}
+	LIB = {
+		bump = require("lib.bump.bump"),
+	}
 	LogMessage("info", "Loaded libraries")
+
+	WORLD = LIB.bump.newWorld()
+	LogMessage("trace", "Created WORLD")
 	PLAYER = require("src.player")
+	WORLD:add(PLAYER, PLAYER.x, PLAYER.y, PLAYER.w, PLAYER.h)
 	LogMessage("trace", "Created PLAYER")
 end
 
-function love.update(dt) end
+function love.update(dt)
+	WORLD:move(PLAYER, PLAYER.x + 20, PLAYER.y)
+	WORLD:update(dt)
+end
 
 function love.draw()
+	SetColor(PLAYER.color)
 	love.graphics.rectangle("fill", PLAYER.x, PLAYER.y, PLAYER.w, PLAYER.h)
 end
 
@@ -45,4 +55,11 @@ function LogMessage(type, msg, add_to_hist)
 		}
 	end
 	return UTILS.DEBUG[type](msg)
+end
+
+---Set color
+---@param color color
+function SetColor(color)
+	color.a = color.a or 1
+	love.graphics.setColor(color.r, color.g, color.b, color.a)
 end
