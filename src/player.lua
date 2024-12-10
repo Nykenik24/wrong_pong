@@ -1,4 +1,3 @@
----@class player
 local player = {
 	x = 25,
   vx = 0,
@@ -15,11 +14,18 @@ local player = {
 	---@field b integer blue
 	---@field a integer alpha
 	color = {
-		r = 1,
-		g = 1,
-		b = 1,
+		r = 0.25,
+		g = 0.25,
+		b = 0.75,
 		a = 1,
 	},
+  type = "player",
+  draw = function(self)
+    love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
+  end,
+  init = function(self)
+    WORLD:add(self, self.x, self.y, self.w, self.h)
+  end
 }
 
 return player
