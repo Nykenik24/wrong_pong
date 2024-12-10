@@ -22,11 +22,67 @@ function love.load()
 	LogMessage("trace", "Created PLAYER")
 	WORLD:add(PLAYER, PLAYER.x, PLAYER.y, PLAYER.w, PLAYER.h)
 	LogMessage("trace", "Added PLAYER to WORLD")
+
+  local walls = {
+    top = {
+      x = 0,
+      y = -25,
+      w = love.graphics.getWidth(),
+      h = 25
+    },
+    bottom = {
+      x = 0,
+      y = love.graphics.getHeight(),
+      w = love.graphics.getWidth(),
+      h = 25
+    },
+    right = {
+      x = love.graphics.getWidth(),
+      y = 0,
+      w = 25,
+      h = love.graphics.getHeight()
+    },
+    left = {
+      x = -25,
+      y = 0,
+      w = 25,
+      h = love.graphics.getHeight()
+    }
+  }
+  for i, wall in pairs(walls) do
+    LogMessage("trace", ("Created %s wall"):format(i))
+    WORLD:add(wall, wall.x, wall.y, wall.w, wall.h)
+  end
 end
 
 function love.update(dt)
   local goalX, goalY = PLAYER.x + (PLAYER.speed * PLAYER.vx) * dt, PLAYER.y + (PLAYER.speed * PLAYER.vy) * dt
   PLAYER.x, PLAYER.y = WORLD:move(PLAYER, goalX, goalY)
+
+  PLAYER.vx = 0
+  PLAYER.vy = 0
+  local keystates = {
+    up = love.keyboard.isDown('w'),
+    down = love.keyboard.isDown('s'),
+    left = love.keyboard.isDown('a'),
+    right = love.keyboard.isDown('d')
+  }
+  if PLAYER.move_x then
+    LogMessage("info", "X not locked")
+    if keystates.right then
+      PLAYER.vx = 1
+    elseif keystates.left then
+      PLAYER.vx = -1
+    end
+  end
+
+  if PLAYER.move_y then
+    if keystates.up  then
+      PLAYER.vy = -1
+    elseif keystates.down then
+      PLAYER.vy = 1
+    end
+  end
 end
 
 function love.draw()
@@ -47,6 +103,11 @@ function love.keypressed(key)
 	end)
 end
 
+---Log a message
+---@param type string Log type (default: "regular")
+---@param msg string Message
+---@param add_to_hist? boolean Log the message
+---@return unknown
 function LogMessage(type, msg, add_to_hist)
 	type = type or "regular"
 	add_to_hist = add_to_hist or false

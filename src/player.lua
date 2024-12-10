@@ -1,20 +1,14 @@
 ---@class player
----@field x integer x pos
----@field y integer y pos
----@field w integer width
----@field h integer height
----@field color color color
----@field vx integer horizontal velocity
----@field vy integer vertical velocity
----@field speed integer speed
 local player = {
-	x = 0,
+	x = 25,
   vx = 0,
-	y = 0,
+  move_x = false,
+	y = 25,
   vy = 0,
-  speed = 300,
-	w = 50,
-	h = 50,
+  move_y = true,
+  speed = 400,
+	w = 40,
+	h = 100,
 	---@class color
 	---@field r integer red
 	---@field g integer green
